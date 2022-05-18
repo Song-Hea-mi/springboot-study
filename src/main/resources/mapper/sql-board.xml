@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board.mapper.BoardMapper">
+	<select id="selectList" resultType="board.dto.BoardDto">
+		<![CDATA[
+			SELECT *
+			FROM board
+			WHERE use_yn = 'Y'
+		]]>
+	</select>
+	
+	<select id="selectBySeq" parameterType="int" resultType="board.dto.BoardDto">
+		<![CDATA[
+			SELECT *
+			FROM board
+			WHERE seq = #{seq}
+			AND use_yn = 'Y'
+		]]>
+	</select>
+	
+	<insert id="insert" parameterType="board.dto.BoardDto" useGeneratedKeys="true" keyProperty="seq">
+		<![CDATA[
+			INSERT INTO board
+			(
+				title, 
+				contents, 
+				created, 
+				create_id,
+				updated,
+				update_id,
+				use_yn
+			) 
+			VALUES 
+			(
+				#{title}, 
+				#{contents}, 
+				NOW(), 
+				'admin',
+				NOW(),
+				'admin',
+				'Y'	
+			)
+		]]>
+	</insert>
+	
+	<update id="update" parameterType="board.dto.BoardDto">
+		<![CDATA[
+			UPDATE board SET 
+				title = #{title},
+				contents = #{contents},
+				updated = NOW(),
+				update_id = 'admin'
+			WHERE seq = #{seq}
+		]]>
+	</update>
+	
+	<update id="delete" parameterType="int">
+		<![CDATA[
+			UPDATE board
+			SET use_yn = 'N'
+			  , updated = NOW()
+			  , update_id = 'admin'
+			WHERE seq = #{seq}
+		]]>
+	</update>
+	
+	<update id="updateHitCount" parameterType="int">
+		<![CDATA[
+			UPDATE board 
+			SET hit_cnt = hit_cnt + 1 
+			WHERE seq = #{seq}
+		]]>
+	</update>
+</mapper>

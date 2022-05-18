@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board.mapper.FileMapper">
+	
+	<insert id="insert" parameterType="board.dto.FileDto" useGeneratedKeys="true" keyProperty="seq">
+		<![CDATA[
+			INSERT INTO file
+			(
+				board_seq,
+				original_name,
+				path,
+				size,
+				created,
+				create_id,
+				updated,
+				update_id,
+				use_yn
+			) 
+			VALUES
+		]]>
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.boardSeq},
+				#{item.originalName},
+				#{item.path},
+				#{item.size},
+				NOW(),
+				'admin',
+				NOW(),
+				'admin',
+				'Y'
+			)
+		</foreach>
+	</insert>
+		
+	<select id="selectListByBoardSeq" parameterType="int" resultType="board.dto.FileDto">
+		<![CDATA[
+			SELECT *
+				 , FORMAT(ROUND(size / 1024), 0) AS kbSize
+			FROM file
+			WHERE board_seq = #{boardSeq}
+			AND use_yn = 'Y'
+		]]>
+	</select>
+	
+	<select id="selectListBySeq" parameterType="int" resultType="board.dto.FileDto">
+		<![CDATA[
+			SELECT *
+			FROM file
+			WHERE seq = #{seq}
+			AND use_yn = 'Y'
+		]]>
+	</select>
+</mapper>
