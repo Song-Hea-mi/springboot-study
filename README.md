@@ -38,3 +38,10 @@ https://github.com/insightbook/Spring-Boot
 1) file 테이블 생성
 2) commons-io, commons-fileupload 의존성 추가
 3) 파일 업로드 및 다운로드 - FileUtils 작성
+
+# 7장 REST API
+1) RESTful 적용하기
+- BoardController.java 수정
+3) REST API 개발하기
+- BoardApiController.java 작성
+- PostMan 
