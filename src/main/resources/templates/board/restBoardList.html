@@ -26,7 +26,7 @@
 	        <tbody>
 	        	<tr th:if="${not #lists.isEmpty(list)}" th:each="list : ${list}">
 	        		<td th:text="${list.seq}"></td>
-	        		<td class="title"><a href="/board/detail.do?seq=" th:attrappend="href=${list.seq}" th:text="${list.title}"></a></td>
+	        		<td class="title"><a href="/board/" th:attrappend="href=${list.seq}" th:text="${list.title}"></a></td>
 	        		<td th:text="${list.hitCnt}"></td>
 	        		<td th:text="${list.created}"></td>
 	        	</tr> 
@@ -35,7 +35,7 @@
 	        	</tr>
 	        </tbody>
 	    </table>
-	    <a href="/board/write.do" class="btn">글 쓰기</a>
+	    <a href="/board/write" class="btn">글 쓰기</a>
     </div>
 </body>
 </html>

@@ -45,7 +45,7 @@
 		</form>
 		
 		<div class="file_list">
-			<a th:each="list : ${board.listFile}" th:href="@{download/file.do(seq=${list.seq})}" th:text="|${list.originalName} (${list.kbSize} kb)|"></a>
+			<a th:each="list : ${board.listFile}" th:href="@{/board/file(seq=${list.seq})}" th:text="|${list.originalName} (${list.kbSize} kb)|"></a>
 		</div>
 		
 		<a href="#this" id="list" class="btn">목록으로</a>
@@ -57,18 +57,18 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#list").on("click", function(){
-				location.href = "/board/list.do";
+				location.href = "/board/";
 			});
 			
 			$("#edit").on("click", function(){
 				var frm = $("#frm")[0];
-				frm.action = "/board/update.do";
+				frm.action = "/board/" + $("#seq").val();
 				frm.submit();
 			});
 			
 			$("#delete").on("click", function(){
 				var frm = $("#frm")[0];
-				frm.action = "/board/delete.do";
+				frm.action = "/board/delete";
 				frm.submit();
 			});
 		});

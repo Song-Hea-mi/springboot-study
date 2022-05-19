@@ -6,7 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,8 +23,6 @@ import board.service.BoardService;
 @Controller
 public class BoardController {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
 	private final BoardMapper boardMapper;
 	private final FileMapper fileMapper;
 	
@@ -31,49 +31,48 @@ public class BoardController {
 		this.fileMapper = fileMapper;
 	}
 	
-	@RequestMapping("/board/list.do")
-	public ModelAndView list() throws Exception{
-		log.info("/board/list");
-		ModelAndView mv = new ModelAndView("/board/list");
+	@RequestMapping(value="/board", method=RequestMethod.GET)
+	public ModelAndView boardGet() throws Exception{
+		ModelAndView mv = new ModelAndView("/board/restBoardList");
 		mv.addObject("list", boardMapper.selectList());
 		return mv;
 	}
 	
-	@RequestMapping("/board/write.do")
-	public String write() throws Exception{
-		return "/board/write";
+	@RequestMapping(value="/board/write", method=RequestMethod.GET)
+	public String boardWriteGet() throws Exception{
+		return "/board/restBoardWrite";
 	}
 	
-	@RequestMapping("/board/insert.do")
-	public String insert(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+	@RequestMapping(value="/board/write", method=RequestMethod.POST)
+	public String boardWritePost(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
 		BoardService boardService = new BoardService(boardMapper, fileMapper);
 		boardService.insert(board, multipartHttpServletRequest);
 		
-		return "redirect:/board/list.do";
+		return "redirect:/board";
 	}
 
-	@RequestMapping("/board/detail.do")
-	public ModelAndView detail(@RequestParam int seq) throws Exception{
-		ModelAndView mv = new ModelAndView("/board/detail");
+	@RequestMapping(value="/board/{seq}", method=RequestMethod.GET)
+	public ModelAndView boardSeqGet(@PathVariable("seq") int seq) throws Exception{
+		ModelAndView mv = new ModelAndView("/board/restBoardDetail");
 		BoardService boardService = new BoardService(boardMapper, fileMapper);
 		mv.addObject("board", boardService.detail(seq));
 		
 		return mv;
 	}
 	
-	@RequestMapping("/board/update.do")
-	public String update(BoardDto board) throws Exception{
+	@RequestMapping(value="/board/{seq}", method=RequestMethod.POST)
+	public String boardSeqPost(BoardDto board) throws Exception{
 		boardMapper.update(board);
-		return "redirect:/board/list.do";
+		return "redirect:/board";
 	}
 	
-	@RequestMapping("/board/delete.do")
-	public String delete(int seq) throws Exception{
+	@RequestMapping("/board/delete")
+	public String boardDelete(int seq) throws Exception{
 		boardMapper.delete(seq);
-		return "redirect:/board/list.do";
+		return "redirect:/board";
 	}
 	
-	@RequestMapping("/board/download/file.do")
+	@RequestMapping(value="/board/file", method=RequestMethod.GET)
 	public void downloadFile(@RequestParam int seq, HttpServletResponse response) throws Exception{
 		FileDto file = fileMapper.selectListBySeq(seq);
 
